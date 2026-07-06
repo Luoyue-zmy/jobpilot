@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>岗位管理 · Jobpilot</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">J</span>
+        <div><strong>Jobpilot</strong><small>求职进程管理</small></div>
+      </div>
+      <nav aria-label="主导航">
+        <a href="#dashboard">看板</a>
+        <a class="active" href="#jobs">岗位</a>
+        <a href="#interviews">面试</a>
+        <a href="#questions">题库</a>
+        <a href="#settings">设置</a>
+      </nav>
+      <div class="connection"><span id="connectionDot"></span><span id="connectionText">正在连接后端</span></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">JOB PIPELINE</p>
+          <h1>岗位管理</h1>
+          <p>记录岗位信息、推进投递状态，并保留完整流转时间线。</p>
+        </div>
+        <button id="addJobBtn" class="primary" type="button">＋ 新增岗位</button>
+      </header>
+
+      <section class="stats" aria-label="岗位统计">
+        <article><span>全部岗位</span><strong id="totalJobs">—</strong></article>
+        <article><span>待投递</span><strong id="todoCount">—</strong></article>
+        <article><span>面试中</span><strong id="interviewCount">—</strong></article>
+        <article><span>已获 Offer</span><strong id="offerCount">—</strong></article>
+      </section>
+
+      <section class="toolbar" aria-label="岗位筛选">
+        <label class="search-field"><span class="sr-only">搜索</span><input id="keywordFilter" type="search" placeholder="搜索公司、岗位或备注"></label>
+        <select id="statusFilter" aria-label="状态筛选">
+          <option value="">全部状态</option>
+          <option value="TO_APPLY">待投递</option><option value="APPLIED">已投递</option>
+          <option value="ASSESSMENT">测评</option><option value="WRITTEN_TEST">笔试</option>
+          <option value="FIRST_INTERVIEW">一面</option><option value="SECOND_INTERVIEW">二面</option>
+          <option value="FINAL_INTERVIEW">终面</option><option value="HR_INTERVIEW">HR 面</option>
+          <option value="OFFER">Offer</option><option value="REJECTED">已拒绝</option>
+          <option value="GIVEN_UP">已放弃</option><option value="CLOSED">已结束</option>
+        </select>
+        <input id="cityFilter" aria-label="城市筛选" placeholder="城市">
+        <select id="deadlineOrder" aria-label="截止时间排序"><option value="">最近更新</option><option value="asc">截止时间从近到远</option><option value="desc">截止时间从远到近</option></select>
+        <button id="refreshBtn" class="secondary" type="button">刷新</button>
+      </section>
+
+      <section class="workspace">
+        <div class="panel list-panel">
+          <div class="panel-heading"><div><h2>岗位列表</h2><span id="resultCount" class="muted"></span></div></div>
+          <div id="jobList" class="job-list" aria-live="polite"></div>
+        </div>
+        <aside id="detailPanel" class="panel detail-panel" aria-live="polite">
+          <div class="empty-state"><strong>选择一个岗位</strong><p>查看岗位详情、修改状态和流转时间线。</p></div>
+        </aside>
+      </section>
+    </main>
+
+    <dialog id="jobDialog">
+      <form id="jobForm">
+        <div class="dialog-heading"><div><p class="eyebrow">JOB RECORD</p><h2 id="dialogTitle">新增岗位</h2></div><button id="closeDialogBtn" class="icon-btn" type="button" aria-label="关闭">×</button></div>
+        <input id="jobId" type="hidden">
+        <div class="form-grid">
+          <label>公司名称 *<input name="companyName" required maxlength="100"></label>
+          <label>岗位名称 *<input name="jobTitle" required maxlength="100"></label>
+          <label>城市<input name="city" maxlength="50"></label>
+          <label>来源平台<input name="sourcePlatform" maxlength="50" placeholder="如：公司官网"></label>
+          <label>公司类型<input name="companyType" maxlength="50"></label>
+          <label>岗位方向<input name="jobDirection" maxlength="50" placeholder="如：Java 后端"></label>
+          <label>优先级<select name="priority"><option value="LOW">低</option><option value="MEDIUM" selected>中</option><option value="HIGH">高</option></select></label>
+          <label>截止时间<input name="deadline" type="datetime-local"></label>
+          <label class="full">岗位链接<input name="jobUrl" type="url" placeholder="https://"></label>
+          <label class="full">技能标签<input name="extractedSkills" placeholder="Java, Spring Boot, MySQL"></label>
+          <label class="full">JD 原文<textarea name="jdText" rows="5"></textarea></label>
+          <label class="full">备注<textarea name="notes" rows="3"></textarea></label>
+        </div>
+        <p id="formError" class="form-error" role="alert"></p>
+        <div class="dialog-actions"><button id="cancelDialogBtn" class="secondary" type="button">取消</button><button id="saveJobBtn" class="primary" type="submit">保存岗位</button></div>
+      </form>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="./api.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
